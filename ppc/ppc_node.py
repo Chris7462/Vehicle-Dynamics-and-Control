@@ -8,10 +8,11 @@ from ackermann_msgs.msg import AckermannDrive
 # ADD THIS
 CSV_FILENAME = '/workspace/src/waypoint/waypoints.csv' #from previous lab
 LOG_FILENAME = '/workspace/src/ppc/ppc_vehicle_log.csv' #this code will generate this
-SPEED = 5.0     # constant forward speed [m/s]
-LOOKAHEAD = 6.0 # lookahead distance [m]
-WHEELBASE = 2.7 # Nissan Leaf wheelbase [m]
-DT = 0.03       # control loop preiod [s] (~33 Hz)
+
+WHEELBASE = 2.7     # wheelbase [m]
+SPEED = 10.0        # constant speed [m/s]
+DT = 0.03           # control loop preiod [s] (~33 Hz)
+LOOKAHEAD = 6.0     # lookahead distance [m]
 
 MAX_STEER_DEG = 70.0     # deg (steering saturation limit)
 
@@ -104,8 +105,7 @@ class PurePursuit(Node):
             ahead = ((wx - self.x)*hx + (wy - self.y)*hy) > 0.0
 
             # Must be at least lookahead distance away
-# ADD THIS
-            far_enough = ...
+            far_enough = ((wx - self.x)**2 + (wy - self.y)**2 >= Ld**2)
 
             if ahead and far_enough:
                 target_i = i
@@ -118,11 +118,12 @@ class PurePursuit(Node):
 
     # Pure Pursuit steering law (use calculated/actual Ld, called Ld_eff)
     def compute_steer(self, tx, ty):
-# ADD THIS
-        ...
-        ...
+        Ld_eff = math.hypot(tx - self.x, ty - self.y)
+        alpha = math.atan2(ty - self.y, tx - self.x) - self.heading
 
         alpha = (alpha + math.pi) % (2.0 * math.pi) - math.pi # wrap alpha to [-pi, pi]
+
+        steer = math.atan(2.0 * WHEELBASE * math.sin(alpha) / Ld_eff)
 
         max_steer = math.radians(MAX_STEER_DEG) # enforce limits on steering
         if steer > max_steer:
@@ -145,7 +146,7 @@ class PurePursuit(Node):
 
         with open(LOG_FILENAME, "w", newline="") as f:
             w = csv.writer(f)
-            w.writerow(["time", "x", "y", "speed"])
+            w.writerow(["time", "x", "y"])
             w.writerows(self.log)
 
 

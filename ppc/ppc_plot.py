@@ -19,11 +19,11 @@ import matplotlib.pyplot as plt
 # ------------------------------------------------------------
 # HARD-CODED FILEPATHS (EDIT THESE)
 # ------------------------------------------------------------
-CSV_FILENAME = '/home/za/Documents/VehDyn26/Lab3/waypoints.csv'         # reference path
-LOG_FILENAME = '/home/za/Documents/VehDyn26/Lab3/ppc_vehicle_log.csv'  # achieved trajectory
+CSV_FILENAME = '/workspace/src/waypoint/waypoints.csv'         # reference path
+LOG_FILENAME = '/workspace/src/ppc/ppc_vehicle_log.csv'  # achieved trajectory
 
 # Student types the speed they used (for labeling only)
-SPEED_USED_MPS = 5.0
+SPEED_USED_MPS = 10.0
 
 # Lane bounds: 6 ft left and 6 ft right of centerline
 LANE_HALF_WIDTH_FT = 6.0
